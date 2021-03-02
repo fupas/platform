@@ -9,7 +9,6 @@ import (
 	taskspb "google.golang.org/genproto/googleapis/cloud/tasks/v2"
 
 	"github.com/fupas/commons/pkg/env"
-	"github.com/fupas/observer/pkg/observer"
 )
 
 /*
@@ -30,7 +29,7 @@ func CreateTask(ctx context.Context, handler string, payload interface{}) (*task
 
 	client, err := cloudtasks.NewClient(ctx)
 	if err != nil {
-		observer.ReportError(err)
+		// observer.ReportError(err) FIXME this is just disabled
 		return nil, err
 	}
 	defer client.Close()
@@ -53,7 +52,7 @@ func CreateTask(ctx context.Context, handler string, payload interface{}) (*task
 		// marshal the payload
 		b, err := json.Marshal(payload)
 		if err != nil {
-			observer.ReportError(err)
+			//observer.ReportError(err) FIXME
 			return nil, err
 		}
 		req.Task.GetAppEngineHttpRequest().Body = b
@@ -61,7 +60,7 @@ func CreateTask(ctx context.Context, handler string, payload interface{}) (*task
 
 	task, err := client.CreateTask(ctx, req)
 	if err != nil {
-		observer.ReportError(err)
+		// observer.ReportError(err) FIXME
 		return nil, err
 	}
 
@@ -74,7 +73,7 @@ func CreateSimpleTask(ctx context.Context, handler, payload string) (*taskspb.Ta
 
 	client, err := cloudtasks.NewClient(ctx)
 	if err != nil {
-		observer.ReportError(err)
+		// observer.ReportError(err) FIXME
 		return nil, err
 	}
 	defer client.Close()
@@ -97,7 +96,7 @@ func CreateSimpleTask(ctx context.Context, handler, payload string) (*taskspb.Ta
 
 	task, err := client.CreateTask(ctx, req)
 	if err != nil {
-		observer.ReportError(err)
+		// observer.ReportError(err) FIXME
 		return nil, err
 	}
 
