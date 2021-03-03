@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"fmt"
 	l "log"
 	"net/http"
 	"os"
@@ -27,6 +28,7 @@ type (
 	// Server is an interface for the HTTP server
 	Server interface {
 		StartBlocking()
+		Stop()
 	}
 
 	server struct {
@@ -54,6 +56,7 @@ func (s *server) Stop() {
 	defer cancel()
 	if err := s.mux.Shutdown(ctx); err != nil {
 		s.mux.Logger.Fatal(err)
+		fmt.Println(err)
 	}
 	l.Printf("Exiting now ...")
 }
@@ -76,5 +79,6 @@ func (s *server) StartBlocking() {
 	// start the server
 	if err := s.mux.Start(env.GetString("PORT", ":8080")); err != nil && err != http.ErrServerClosed {
 		s.mux.Logger.Fatal("Error shutting down the server")
+		fmt.Println(err)
 	}
 }
