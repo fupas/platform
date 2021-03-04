@@ -1,0 +1,19 @@
+service: default
+
+runtime: go115
+instance_class: F1
+
+handlers:
+- url: /.*
+  script: auto
+  secure: always
+
+env_variables:
+  # Required Google Cloud
+  PROJECT_ID: 'project_id'
+  LOCATION_ID: 'location_id'
+  SERVICE_NAME: 'default'
+  
+  # Optional App Settings
+  MASTER_KEY: "63..."
+  STATIC_FILE_LOCATION: "./examples/static/public"

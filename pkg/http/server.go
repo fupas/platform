@@ -3,8 +3,6 @@ package http
 import (
 	"context"
 	"fmt"
-	l "log"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -56,13 +54,13 @@ func (s *server) Stop() {
 	defer cancel()
 	if err := s.mux.Shutdown(ctx); err != nil {
 		s.mux.Logger.Fatal(err)
-		fmt.Println(err)
 	}
-	l.Printf("Exiting now ...")
+
 }
 
 // StartBlocking starts a new server in the main process
 func (s *server) StartBlocking() {
+
 	// setup shutdown handling
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
@@ -77,8 +75,7 @@ func (s *server) StartBlocking() {
 	}
 
 	// start the server
-	if err := s.mux.Start(env.GetString("PORT", ":8080")); err != nil && err != http.ErrServerClosed {
-		s.mux.Logger.Fatal("Error shutting down the server")
-		fmt.Println(err)
-	}
+	port := fmt.Sprintf(":%s", env.GetString("PORT", "8080"))
+	s.mux.Logger.Fatal(s.mux.Start(port))
+
 }

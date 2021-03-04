@@ -1,3 +1,7 @@
+# Environment settings, keys, files with credentials
+app.yaml
+hack/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

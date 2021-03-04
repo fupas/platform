@@ -4,29 +4,49 @@ import (
 	"fmt"
 	l "log"
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
+	"github.com/labstack/echo/v4/middleware"
 
-	srv "github.com/fupas/platform/pkg/http"
+	"github.com/fupas/commons/pkg/env"
+	svc "github.com/fupas/platform/pkg/http"
 )
 
+// ShutdownDelay is the delay before exiting the process
+const ShutdownDelay = 10
+
 // the router instance
-var svc *srv.Server
+var mux *echo.Echo
+var staticFileLocation string = env.GetString("STATIC_FILE_LOCATION", "public")
 
-func shutdown(*echo.Echo) {
-	l.Printf("Cleaning-up ...")
-}
-
-func setupRouter() *echo.Echo {
-	// Create a new instance
+func setup() *echo.Echo {
+	// Create a new router instance
 	e := echo.New()
-	e.Logger.SetLevel(log.INFO)
 
-	// Serve static files from ./public
-	e.Static("/", "public")
+	// add and configure the middlewares
+	e.Use(middleware.Recover())
+	// TODO: add configure e.Use(middleware.Gzip())
+
+	// TODO: add/configure e.Use(middleware.Logger())
+	// TODO: e.Logger.SetLevel(log.INFO)
+
+	// add the routes last
+	e.Static("/", staticFileLocation) // serve static files from e.g. ./public
 
 	return e
+}
+
+func shutdown(*echo.Echo) {
+	// TODO: implement your own stuff here
+
+	l.Printf("Exiting now ...")
+}
+
+func init() {
+	// TODO: initialize everything global here
+
+	l.Printf("Initializing ...")
 }
 
 func customHTTPErrorHandler(err error, c echo.Context) {
@@ -34,7 +54,7 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 	if he, ok := err.(*echo.HTTPError); ok {
 		code = he.Code
 	}
-	errorPage := fmt.Sprintf("public/%d.html", code)
+	errorPage := fmt.Sprintf("%s/%d.html", staticFileLocation, code)
 	if err := c.File(errorPage); err != nil {
 		c.Logger().Error(err)
 	}
@@ -42,6 +62,13 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 }
 
 func main() {
-	svc := srv.NewServer(setupRouter, shutdown, customHTTPErrorHandler)
-	svc.StartBlocking()
+	e, ok := os.LookupEnv("PORT")
+	if ok {
+		l.Printf("PORT='%s'", e)
+	} else {
+		l.Printf("PORT= is undefined")
+	}
+
+	service := svc.NewServer(setup, shutdown, customHTTPErrorHandler)
+	service.StartBlocking()
 }
