@@ -4,7 +4,6 @@ import (
 	"fmt"
 	l "log"
 	"net/http"
-	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -62,13 +61,6 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 }
 
 func main() {
-	e, ok := os.LookupEnv("PORT")
-	if ok {
-		l.Printf("PORT='%s'", e)
-	} else {
-		l.Printf("PORT= is undefined")
-	}
-
 	service := svc.NewServer(setup, shutdown, customHTTPErrorHandler)
 	service.StartBlocking()
 }
