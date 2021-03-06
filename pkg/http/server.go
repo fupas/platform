@@ -74,6 +74,8 @@ func (s *server) StartBlocking() {
 		s.mux.HTTPErrorHandler = s.errorHandlerImpl
 	}
 
+	s.mux.HideBanner = true
+
 	// start the server
 	port := fmt.Sprintf(":%s", env.GetString("PORT", "8080"))
 	s.mux.Logger.Fatal(s.mux.Start(port))

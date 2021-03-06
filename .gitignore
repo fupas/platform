@@ -1,6 +1,7 @@
 # Environment settings, keys, files with credentials
 app.yaml
 hack/
+stuff.md
 
 # Binaries for programs and plugins
 *.exe

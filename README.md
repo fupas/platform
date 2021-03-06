@@ -1,8 +1,10 @@
 # fupas/platform
 
-This library is a lightweight golang runtime abstaction to build cloud-native services independent from the infrastructure the service is deployed on. For now, it targets direct deplyoment (bare-metal), deployment in containers and on Google AppEngine.
+This library is a lightweight golang runtime abstaction to build cloud-native services independent from the infrastructure the service is deployed on.
 
-In addition to provide basic service abstractions (e.g. logging) `fupas/platform` also implements "higher-functions" e.g. a opinionated service authentication and authorization.
+ The interfaces are inspired by the Google AppEngine and Google Cloud Platform APIs and first platform provider targets GCP only. Deployment in containers independent from a particular Cloud Provider will be next (TBD!).
+
+In addition to provide basic service abstractions (e.g. logging) `fupas/platform` also implements "higher-functions" e.g. opinionated service authentication and authorization or a simple key/value store.
 
 ## Packages
 
